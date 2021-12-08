@@ -9,7 +9,6 @@ import AdventUtils.Utils;
 /**
  * See https://adventofcode.com/2021/day/6 for the day's problem.
  */
-
 class Solution06 {
     static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.S");  
 
