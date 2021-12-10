@@ -11,7 +11,7 @@ public class Utils {
      * Reads in the input data from the input data file.
      * @return a list of the input data.
      */
-    public static ArrayList<Integer> getInputData(String workingDir) {
+    public static ArrayList<Integer> getInputDataList(String workingDir) {
         ArrayList<Integer> input = new ArrayList<>();
         try {
             File myObj = new File(workingDir + "/input.txt");

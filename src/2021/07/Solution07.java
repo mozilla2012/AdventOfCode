@@ -27,7 +27,7 @@ class Solution07 {
      */
     private static void doPuzzle() {
         System.out.println("Puzzling...");
-        ArrayList<Integer> crabLocations = Utils.getInputData("src/2021/07");
+        ArrayList<Integer> crabLocations = Utils.getInputDataList("src/2021/07");
         
         int numCrabs = crabLocations.size();
         long[] distanceToTravelAtIndex = new long [numCrabs];

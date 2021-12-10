@@ -27,7 +27,7 @@ class Template {
      */
     private static void doPuzzle() {
         System.out.println("Puzzling...");
-        ArrayList<Integer> inputData = Utils.getInputData("src/20##/0#");
+        ArrayList<Integer> inputData = Utils.getInputDataList("src/20##/0#");
     }
 
 }

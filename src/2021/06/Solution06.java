@@ -32,7 +32,7 @@ class Solution06 {
         final int FISH_START_VAL = 6;
         final int NEW_FISH_START_VAL = 8;
 
-        ArrayList<Integer> inputFishes = Utils.getInputData("src/2021/06");
+        ArrayList<Integer> inputFishes = Utils.getInputDataList("src/2021/06");
         System.out.printf("Initial school: %s\n", inputFishes);
         
         // Initialize the counts. Each index will count the number of fish that are that many days from cloning.
@@ -69,7 +69,7 @@ class Solution06 {
         final int FISH_START_VAL = 6;
         final int NEW_FISH_START_VAL = 8;
 
-        ArrayList<Integer> fishes = Utils.getInputData("src/2021/06");
+        ArrayList<Integer> fishes = Utils.getInputDataList("src/2021/06");
         System.out.printf("Day 0: %s\n", fishes);
         
         int days = 256;
