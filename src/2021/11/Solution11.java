@@ -31,10 +31,11 @@ class Solution11 {
         int[][] octoGrid = Utils.getInputDataGrid("src/2021/11");
         int numRows = octoGrid[0].length;
         int numCols = octoGrid.length;
+        int numOctos = numCols * numRows;
         Utils.printGrid(octoGrid);
         
-        int stepGoal = 100;
-        for(int i = 0; i < stepGoal; i++) {
+        int stepGoal = 10000;
+        for(int i = 1; i <= stepGoal; i++) {
             // First, increase all octopuses by one.
             for(int y = 0; y < numRows; y++)
             {
@@ -56,14 +57,20 @@ class Solution11 {
             }
             
             // Then set all octopuses over 9 back to zero.
+            int flashes = 0;
             for(int y = 0; y < numRows; y++)
             {
                 for(int x = 0; x < numCols; x++)
                 {
                     if(octoGrid[x][y] > 9) {
                         octoGrid[x][y] = 0;
+                        flashes++;
                     }
                 }
+            }
+            if (flashes == numOctos){
+                System.out.printf("All flash on step %d\n",i);
+                System.exit(0);
             }
         }    
         System.out.println("");
