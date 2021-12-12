@@ -91,4 +91,23 @@ public class Utils {
             System.out.printf("\n");
         }
     }
+
+    /**
+     * Reads in the input data from the input data file.
+     * @return a list of Strings. Each line in the file is a String.
+     */
+    public static ArrayList<String> getInputStrings(String workingDir) {
+        ArrayList<String> input = new ArrayList<>();
+        try {
+            File myObj = new File(workingDir + "/input.txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                input.add(myReader.nextLine());
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return input;
+    }
 }
