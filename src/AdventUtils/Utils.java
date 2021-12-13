@@ -92,6 +92,21 @@ public class Utils {
         }
     }
 
+     /**
+     * Prints a grid of ints.
+     * @param grid of ints to print.
+     */
+    public static void printBoolGrid(boolean[][] grid, int maxX, int maxY) {
+        for(int y = 0; y < maxY; y++)
+        {
+            for(int x = 0; x < maxX; x++)
+            {
+                System.out.printf("%c", grid[x][y] ? '#' : '.');
+            }
+            System.out.printf("\n");
+        }
+    }
+
     /**
      * Reads in the input data from the input data file.
      * @return a list of Strings. Each line in the file is a String.
