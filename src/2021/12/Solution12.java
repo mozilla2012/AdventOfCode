@@ -2,6 +2,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import AdventUtils.Utils;
 
@@ -10,6 +13,9 @@ import AdventUtils.Utils;
  */
 class Solution12 {
     static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.S");
+
+    // private static ArrayList<ArrayList<String>> acceptedPaths = new ArrayList<>();
+    private static HashSet<String> acceptedPaths = new HashSet<>();
 
     public static void main (String[] args) {
         Date startTime = new Date();          
@@ -34,13 +40,73 @@ class Solution12 {
         final String startCave = "start";
         
         int numPaths = 0;
-        ArrayList<String> visitedCaves = new ArrayList<>();
-        visitedCaves.add(caveHash.get(startCave).name);
-        for (Cave n : caveHash.get(startCave).neighbors) {
-            numPaths = spelunk(n, caveHash, numPaths, new ArrayList<>(visitedCaves));
+
+        for (Cave smallCave : getSmallCaves(caveHash)) {
+            ArrayList<String> visitedCaves = new ArrayList<>();
+            visitedCaves.add(caveHash.get(startCave).name);
+            for (Cave n : caveHash.get(startCave).neighbors) {
+                numPaths = spelunk2(n, caveHash, numPaths, new ArrayList<>(visitedCaves), smallCave);
+            }
         }
-        System.out.println(numPaths);
+        System.out.println(acceptedPaths.size());
     }
+
+
+    private static List<Cave> getSmallCaves(HashMap<String, Cave> caveHash) {
+        return caveHash.values().stream()
+            .filter(cave -> !cave.isLarge)
+            .collect(Collectors.toList());
+    }
+
+
+    /**
+     * Recursively dive to the end node.
+     * @param currentCave
+     * @param caveHash Map of all caves
+     * @param numPaths How many paths have been found so far
+     * @return the current number of paths found
+     */
+    private static int spelunk2(Cave currentCave, HashMap<String, Cave> caveHash, 
+                                int numPaths, ArrayList<String> visitedCaves, Cave specialSmallCave) {
+        final String endCave = "end";
+        final String startCave = "start";
+
+        if (currentCave.name.equals(endCave)) {
+            numPaths++;
+            // System.out.println(visitedCaves);
+            acceptedPaths.add(visitedCaves.toString());
+            return numPaths;
+        }
+
+        if ((currentCave.name.equals(startCave)) || 
+            (currentCave.equals(specialSmallCave) && specialCaveVisitedTwice(visitedCaves, specialSmallCave)) || 
+            (!currentCave.equals(specialSmallCave) && visitedCaves.contains(currentCave.name) && !currentCave.isLarge))
+        {
+            return numPaths;
+        }
+
+        visitedCaves.add(currentCave.name);
+
+        for (Cave n : currentCave.neighbors) {
+            numPaths = spelunk2(n, caveHash, numPaths, new ArrayList<>(visitedCaves), specialSmallCave);
+        }
+        return numPaths;
+    }
+
+
+    private static boolean specialCaveVisitedTwice(ArrayList<String> visitedCaves, Cave specialSmallCave) {
+        int count = 0;
+        for (String c : visitedCaves) {
+            if (c.equals(specialSmallCave.name)) {
+                count++;
+            }
+            if(count >=2) {
+                return true;
+            }
+        }
+    return false;
+    }
+
 
     /**
      * Recursively dive to the end node.
@@ -102,6 +168,7 @@ class Solution12 {
     }
 }
 
+
 class Cave {
     public String name;
     public ArrayList<Cave> neighbors;
@@ -112,6 +179,7 @@ class Cave {
         this.isLarge = isLarge;
         this.neighbors = new ArrayList<>();
     }
+
 
     /**
      * Creates a relationship between two caves. Adds the caves to each other's list of neighbors if it 
@@ -126,7 +194,8 @@ class Cave {
             newNeighbor.neighbors.add(this);
         }   
     }
-    
+
+
     public String toString(){
         String size = isLarge ? "Large" : "Small";
         String neighborString = "[";
@@ -135,5 +204,10 @@ class Cave {
         }
         neighborString += "]";
         return String.format("(Name: %s; Size: %s; Neighbors: %s)", this.name, size, neighborString);
+    }
+
+
+    public boolean equals(Cave c) {
+        return this.name.equals(c.name);
     }
 }
