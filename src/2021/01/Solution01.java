@@ -29,13 +29,23 @@ class Solution01 {
         System.out.println("Puzzling...");
         ArrayList<Integer> inputData = Utils.getInputDataList("src/2021/01");
 
-        int increasingCount = 0;
+        int increasingCountPart1 = 0;
         for(int i = 0; i < inputData.size()-1; i++) {
             if(inputData.get(i) < inputData.get(i+1)) {
-                increasingCount++;
+                increasingCountPart1++;
             }
         }
-        System.out.println(increasingCount);
+
+        int increasingCountPart2 = 0;
+        for(int i = 0; i < inputData.size()-3; i++) {
+            int runningSum1 = inputData.get(i+0) + inputData.get(i+1) + inputData.get(i+2);
+            int runningSum2 = inputData.get(i+1) + inputData.get(i+2) + inputData.get(i+3);
+            if(runningSum1 < runningSum2) {
+                increasingCountPart2++;
+            }
+        }
+        System.out.println(increasingCountPart1);
+        System.out.println(increasingCountPart2);
     }
 
 }
