@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Utils {
 
     /**
-     * Reads in the input data from the input data file.
+     * Reads in the input data from the input data file. Assumes each number is separated by a comma.
      * @return a list of the input data.
      */
     public static ArrayList<Integer> getInputDataList(String workingDir) {
@@ -86,7 +86,7 @@ public class Utils {
         {
             for(int x = 0; x < numCols; x++)
             {
-                System.out.printf("%d",grid[x][y]);
+                System.out.printf("%d", grid[x][y]);
             }
             System.out.printf("\n");
         }
