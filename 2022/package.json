@@ -1,0 +1,26 @@
+{
+    "name": "advent-of-code-2022",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -r build",
+        "cleanbuild": "npm run clean ; npm run build",
+        "buildrun": "npm run cleanbuild ; npm run xmas",
+        "xmas": "node ./build/util/runner.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mozilla2012/adventOfCode.git"
+    },
+    "author": "Evan Arnold",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/mozilla2012/adventOfCode/issues"
+    },
+    "homepage": "https://github.com/mozilla2012/adventOfCode#readme",
+    "dependencies": {
+        "@types/node": "^18.11.10"
+    }
+}
