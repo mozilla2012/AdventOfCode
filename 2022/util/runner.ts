@@ -1,8 +1,9 @@
 import { AssertionError } from "assert";
+import * as fs from 'fs';
 
 async function runner() {
 
-    // First, parse the arg.
+    // First, parse the arg so we can tell what day we're starting with.
     const myArgs = process.argv.slice(2);
     if (myArgs.length !== 1) {
         throw new Error(`Expected exactly one arg: The day of the challenge. Received args: ${myArgs}`);
@@ -14,9 +15,38 @@ async function runner() {
     console.log(`Running day ${dayToRun}...`);
 
     // Loading a module like this is probably a violation of the Geneva Conventions.
-    const pathToFile: string = `../${dayToRun}/${dayToRun}.js`;
-    const importedModule = await import(pathToFile);
-    importedModule.adventMain();
+    const pathToDir: string = `days/${dayToRun}`;
+    const pathToCode: string =   `../${pathToDir}/${dayToRun}.js`; // Reading in a module? Your starting dir is the built .js file.
+    const pathToTest: string =   `build/${pathToDir}/sample.txt`;  // Reading in a file? Your starting point is the root of the project? 
+    const pathToPuzzle: string = `build/${pathToDir}/puzzle.txt`;  //                    Again, this code is probably highly illegal.
+    
+    // Import the day's module:
+    const importedModule = await import(pathToCode);
+
+    // Read in the test file
+    const testFileContent: string = fs.readFileSync(pathToTest, 'utf8');
+    const testFileLines: string[] = testFileContent.split('\n');
+    if (testFileLines.length < 2) {
+        throw new Error('The test file (sample.txt) should start with two lines: The first being the expected answer and the second some' 
+            + 'sort of divider. The test data should start on line 3.');
+    }
+    const expectedTestResult = parseInt(testFileLines.shift()!);
+    testFileLines.shift();
+    const testData = testFileLines.join('\n');
+
+    // Run the test data!
+    console.log('Testing...\n');
+    const testResult: any = importedModule.adventMain(testData);
+    if (testResult !== expectedTestResult) {
+        console.log(`Expected to get ${expectedTestResult} but got ${testResult}.`)
+        process.exit(1);
+    }
+    console.log('\nTest passed! Attempting main puzzle...\n');
+    
+    // Run the main puzzle!
+    const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8');
+    const mainResult: any = importedModule.adventMain(puzzleFileContent);
+    console.log('\nTry this!:\n' + mainResult + '\n');
 }
 
 runner();
