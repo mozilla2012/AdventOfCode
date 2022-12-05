@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc && npm run copy-files",
-        "buildrun": "npm run cleanbuild ; npm run xmas",
+        "buildrun": "npm run cleanbuild && npm run xmas",
         "clean": "rm -r build",
         "cleanbuild": "npm run clean ; npm run build",
         "copy-files": "cp -r ./days/ ./build/",
