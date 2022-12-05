@@ -14,14 +14,17 @@ async function runner() {
 
     console.log(`Running day ${dayToRun}...`);
 
+
     // Loading a module like this is probably a violation of the Geneva Conventions.
     const pathToDir: string = `days/${dayToRun}`;
     const pathToCode: string =   `../${pathToDir}/${dayToRun}.js`; // Reading in a module? Your starting dir is the built .js file.
-    const pathToTest: string =   `build/${pathToDir}/sample.txt`;  // Reading in a file? Your starting point is the root of the project? 
+    const pathToTest: string =   `build/${pathToDir}/sample.txt`;  // Reading in a file? Your starting point is ...the root of the project?
     const pathToPuzzle: string = `build/${pathToDir}/puzzle.txt`;  //                    Again, this code is probably highly illegal.
     
+
     // Import the day's module:
     const importedModule = await import(pathToCode);
+
 
     // Read in the test file
     const testFileContent: string = fs.readFileSync(pathToTest, 'utf8');
@@ -34,6 +37,7 @@ async function runner() {
     testFileLines.shift();
     const testData = testFileLines.join('\n');
 
+
     // Run the test data!
     console.log('Testing...\n');
     const testResult: any = importedModule.adventMain(testData);
@@ -43,6 +47,7 @@ async function runner() {
     }
     console.log('\nTest passed! Attempting main puzzle...\n');
     
+
     // Run the main puzzle!
     const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8');
     const mainResult: any = importedModule.adventMain(puzzleFileContent);
