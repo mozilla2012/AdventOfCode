@@ -12,7 +12,7 @@ export function adventMain(input: string): number {
     let overlap = 0;
 
     for (const partners of pairs) {
-        if(checkOverlap(partners)) {
+        if(checkFullOverlap(partners)) {
             overlap++;
         }
     }
@@ -20,7 +20,8 @@ export function adventMain(input: string): number {
     return overlap;
 }
 
-function checkOverlap(partners: string[]): boolean {
+// Part 1
+function checkFullOverlap(partners: string[]): boolean {
     const elf1 = partners[0]!.split('-');
     const e1l = parseInt(elf1[0]!);
     const e1r = parseInt(elf1[1]!);
@@ -29,9 +30,18 @@ function checkOverlap(partners: string[]): boolean {
     const e2l = parseInt(elf2[0]!);
     const e2r = parseInt(elf2[1]!);
 
-    const e1Consumese2: boolean = (e1l <= e2l && e1r >= e2r);
-    const e2Consumese1: boolean = (e2l <= e1l && e2r >= e1r);
-
-    return e1Consumese2 || e2Consumese1;
+    return ((e1l <= e2l && e1r >= e2r) || (e2l <= e1l && e2r >= e1r));
 }
 
+// Part 2
+function checkAnyOverlap(partners: string[]): boolean {
+    const elf1 = partners[0]!.split('-');
+    const e1l = parseInt(elf1[0]!);
+    const e1r = parseInt(elf1[1]!);
+
+    const elf2 = partners[1]!.split('-');
+    const e2l = parseInt(elf2[0]!);
+    const e2r = parseInt(elf2[1]!);
+
+    return ((e2l >= e1l && e2l <= e1r) || (e1l >= e2l && e1l <= e2r));
+}
