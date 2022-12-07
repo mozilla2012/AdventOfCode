@@ -33,7 +33,7 @@ async function runner() {
         throw new Error('The test file (sample.txt) should start with two lines: The first being the expected answer and the second some' 
             + 'sort of divider. The test data should start on line 3.');
     }
-    const expectedTestResult = parseInt(testFileLines.shift()!);
+    const expectedTestResult = testFileLines.shift();
     testFileLines.shift();
     const testData = testFileLines.join('\n');
 
@@ -41,7 +41,7 @@ async function runner() {
     // Run the test data!
     console.log('Testing...\n');
     const testResult: any = importedModule.adventMain(testData);
-    if (testResult !== expectedTestResult) {
+    if (testResult != expectedTestResult) {
         console.log(`Expected to get ${expectedTestResult} but got ${testResult}.`)
         process.exit(1);
     }
