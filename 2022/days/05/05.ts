@@ -2,6 +2,7 @@
 
 export function adventMain(input: string): any {
 
+
     let rows: string[] = input.split('\n');
     let boxes: string[][] = [];
 
@@ -35,10 +36,17 @@ export function adventMain(input: string): any {
         const from: number = parseInt(values![2]!)-1;
         const dest: number = parseInt(values![3]!)-1;
 
+        let stuffToMove: any[] = [];
         for (let i = 0; i < quan; i++) {
             if(stacks[from]!.length > 0) {
-                stacks[dest]!.unshift(stacks[from]!.shift());
+                // stacks[dest]!.unshift(stacks[from]!.shift()); // Part 1
+                stuffToMove.unshift(stacks[from]!.shift()); // Part 2
             }
+        }
+
+        // For loop needed for Part 2 only
+        for(const item of stuffToMove) {
+            stacks[dest]!.unshift(item);
         }
     }
     let answer: string = '';
