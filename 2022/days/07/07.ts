@@ -1,6 +1,7 @@
 // https://adventofcode.com/2022/day/7
 
 let dirsOfSpecialSize: Directory[];
+let allDirs: Directory[];
 
 class Directory {
     name: string;
@@ -20,6 +21,7 @@ class Directory {
 
 export function adventMain(input: string): any {
     dirsOfSpecialSize = [];
+    allDirs = [];
     
     const commands: string[] = input.split('\n');
 
@@ -59,7 +61,16 @@ export function adventMain(input: string): any {
 
     // Now do the math.
     calculateActualSize(root);
-    return dirsOfSpecialSize.reduce((accumulator, currentDir)=>{return accumulator + currentDir.size}, 0);
+
+    let smallestFreeableDirSize: number = root.size;
+    for(const dir of allDirs) { 
+        if(dir.size >= (30000000 - (70000000 - root.size)) && dir.size < smallestFreeableDirSize) {
+            smallestFreeableDirSize = dir.size;
+        }
+    }
+
+    // return dirsOfSpecialSize.reduce((accumulator, currentDir)=>{return accumulator + currentDir.size}, 0); // Part 1
+    return smallestFreeableDirSize; // Part 2
 }
 
 function calculateActualSize(dir: Directory) {
@@ -71,4 +82,5 @@ function calculateActualSize(dir: Directory) {
     if (dir.size <= 100000) {
         dirsOfSpecialSize.push(dir);
     }
+    allDirs.push(dir);
 }
