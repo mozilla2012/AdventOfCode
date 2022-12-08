@@ -2,7 +2,6 @@
 
 export function adventMain(input: string): any {
 
-
     let rows: string[] = input.split('\n');
     let boxes: string[][] = [];
 
