@@ -1,7 +1,7 @@
 // https://adventofcode.com/2022/day/9
 
 export function adventMain(input: string): any {
-    let knots: [number,number][] = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]];
+    let knots: [number,number][] = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]; // Change the length of this array for Part 1 or Part 2!
     let tail = knots.length-1;
     let visited: [number,number][] = [];
     visited.push(knots[tail]!);
@@ -26,8 +26,8 @@ export function adventMain(input: string): any {
             }
     
             // Update following knots
-            for(let k = 1; k < 10; k++) {
-                if(!((Math.abs(knots[k-1]![0] - knots[k]![0]) <= 1) && (Math.abs(knots[k-1]![1] - knots[k]![1]) <= 1))) { // If knots[k]! is not adjacent, move it.
+            for(let k = 1; k < knots.length; k++) {
+                if(!((Math.abs(knots[k-1]![0] - knots[k]![0]) <= 1) && (Math.abs(knots[k-1]![1] - knots[k]![1]) <= 1))) { // If "tail" is not adjacent, move it.
                     if(knots[k-1]![0] !== knots[k]![0]) {
                         knots[k]! = [knots[k]![0] + (knots[k-1]![0]-knots[k]![0])/Math.abs(knots[k-1]![0]-knots[k]![0]), knots[k]![1]]; // If not in the same row, move 1 row closer
                     }
