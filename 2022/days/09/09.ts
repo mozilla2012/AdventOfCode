@@ -1,10 +1,10 @@
 // https://adventofcode.com/2022/day/9
 
 export function adventMain(input: string): any {
-    let head: [number,number] = [0,0]; // ROW, COL
-    let tail: [number,number] = [0,0];
+    let knots: [number,number][] = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]];
+    let tail = knots.length-1;
     let visited: [number,number][] = [];
-    visited.push(tail);
+    visited.push(knots[tail]!);
 
     const movements = input.split('\n');
 
@@ -16,25 +16,27 @@ export function adventMain(input: string): any {
         for (let i = 0; i < steps; i++) {
             // Update head
             if(direction === 'R') {
-                head = [head[0], head[1] + 1];
+                knots[0]! = [knots[0]![0], knots[0]![1] + 1];
             } else if(direction === 'L') {
-                head = [head[0], head[1] - 1];
+                knots[0]! = [knots[0]![0], knots[0]![1] - 1];
             } else if(direction === 'U') {
-                head = [head[0] + 1, head[1]];
+                knots[0]! = [knots[0]![0] + 1, knots[0]![1]];
             } else if(direction === 'D') {
-                head = [head[0] - 1, head[1]];
+                knots[0]! = [knots[0]![0] - 1, knots[0]![1]];
             }
     
-            // Update tail
-            if(!((Math.abs(head[0] - tail[0]) <= 1) && (Math.abs(head[1] - tail[1]) <= 1))) { // If tail is not adjacent, move it.
-                if(head[0] !== tail[0]) {
-                    tail = [tail[0] + (head[0]-tail[0])/Math.abs(head[0]-tail[0]), tail[1]]; // If not in the same row, move 1 row closer
-                }
-                if(head[1] !== tail[1]) {
-                    tail = [tail[0], tail[1] + (head[1]-tail[1])/Math.abs(head[1]-tail[1])]; // If not in the same col, move 1 col closer
-                }
-                if(!visited.some((location)=>{return (location[0]===tail[0] && location[1]===tail[1])})) { // Add to set of visited.
-                    visited.push(tail);
+            // Update following knots
+            for(let k = 1; k < 10; k++) {
+                if(!((Math.abs(knots[k-1]![0] - knots[k]![0]) <= 1) && (Math.abs(knots[k-1]![1] - knots[k]![1]) <= 1))) { // If knots[k]! is not adjacent, move it.
+                    if(knots[k-1]![0] !== knots[k]![0]) {
+                        knots[k]! = [knots[k]![0] + (knots[k-1]![0]-knots[k]![0])/Math.abs(knots[k-1]![0]-knots[k]![0]), knots[k]![1]]; // If not in the same row, move 1 row closer
+                    }
+                    if(knots[k-1]![1] !== knots[k]![1]) {
+                        knots[k]! = [knots[k]![0], knots[k]![1] + (knots[k-1]![1]-knots[k]![1])/Math.abs(knots[k-1]![1]-knots[k]![1])]; // If not in the same col, move 1 col closer
+                    }
+                    if(k == tail && !visited.some((location)=>{return (location[0]===knots[k]![0] && location[1]===knots[k]![1])})) { // Add to set of visited.
+                        visited.push(knots[k]!);
+                    }
                 }
             }
         }
