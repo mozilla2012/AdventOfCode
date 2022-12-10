@@ -11,29 +11,19 @@ export function adventMain(input: string): any {
     sumStrength = 0;
     screen = [new Array(40), new Array(40), new Array(40), new Array(40), new Array(40), new Array(40)];
     const lines = input.split('\n');
-
     for(let line of lines) {
-        if (line === "noop") {
+        incrementCycleAndCalcStrength();
+        if (line !== "noop") {
             incrementCycleAndCalcStrength();
-            continue;
-        } else {
-            incrementCycleAndCalcStrength();
-            incrementCycleAndCalcStrength();
-            let val = parseInt(line.split(' ')[1]!);
-            regX += val;
+            regX += parseInt(line.split(' ')[1]!);
         }
-    }   
-    for(let row of screen) {
-        console.log(row.join(''));
     }
+    screen.forEach((row) => console.log(row.join('')));
     return sumStrength;
 }
 
 function incrementCycleAndCalcStrength(): void{
-    screen[Math.floor((cycle-1) / 40)]![((cycle-1) % 40)] =  (regX === ((cycle-1) % 40) || (regX - 1) === ((cycle-1) % 40) || (regX + 1) === ((cycle-1) % 40)) ? 'X' : '.'; // Update the screen.
-    if( ((cycle + 20) % 40) === 0 && cycle <= 220) {
-        let strength = (regX * cycle);
-        sumStrength += strength;
-    }
+    screen[Math.floor((cycle - 1) / 40)]![((cycle - 1) % 40)] = (regX === ((cycle - 1) % 40) || (regX - 1) === ((cycle - 1) % 40) || (regX + 1) === ((cycle - 1) % 40)) ? 'X' : '.'; // Update the screen.
+    sumStrength += (((cycle + 20) % 40) === 0 && cycle <= 220) ? (regX * cycle) : 0;
     cycle++;
 }
