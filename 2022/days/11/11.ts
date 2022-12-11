@@ -1,7 +1,5 @@
 // https://adventofcode.com/2022/day/11
 
-import { exit } from "process";
-
 class Monke {
     items: number[];
     operand: string;
@@ -33,36 +31,25 @@ export function adventMain(input: string): any {
         let operand: string = lines[i + 2]!.charAt(23);
         let opVal: number = (lines[i + 2]!.substring(25) === 'old') ? -1 : parseInt(lines[i + 2]!.substring(25)); // Using -1 to signify 'old'
         let testDiv: number = parseInt(lines[i + 3]!.substring(21));
-        lcm *= testDiv;
         let trueMonkey: number = parseInt(lines[i + 4]!.substring(29));
         let falseMonkey: number = parseInt(lines[i + 5]!.substring(30));
         monkeList.push(new Monke(items, operand, opVal, testDiv, trueMonkey, falseMonkey));
+        lcm *= testDiv;
     }
 
     for(let round = 1; round <= 10000; round++) {
         for(let monke of monkeList) {
             for(let item of monke.items) {
                 monke.inspections++;
-                let worry = item;
-                if(monke.operand === '*') {
-                    worry *= (monke.opVal === -1) ? worry : monke.opVal;
-                } else { // operand === +
-                    worry += monke.opVal;
-                }
-                // worry = Math.floor(worry / 3);
-                worry %= lcm;
-                if (worry % monke.testDiv === 0) {
-                    monkeList[monke.trueMonkey]!.items.push(worry);
-                } else {
-                    monkeList[monke.falseMonkey]!.items.push(worry);
-                }
+                item = (monke.operand === '*') ? ((monke.opVal === -1) ? (item * item) : (item * monke.opVal)) : (item + monke.opVal); 
+                // item = Math.floor(item / 3); // Part 1
+                item %= lcm;
+                monkeList[((item % monke.testDiv === 0) ? monke.trueMonkey : monke.falseMonkey)]!.items.push(item);
                 monke.items = [];
             }
         }
     }
 
-    const inspections: number[] = monkeList.map(monke => monke.inspections);
-    inspections.sort((a, b) => a - b);
-
+    const inspections: number[] = (monkeList.map(monke => monke.inspections)).sort((a, b) => a - b);
     return (inspections[inspections.length - 1]! * inspections[inspections.length - 2]!);
 }
