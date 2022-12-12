@@ -28,7 +28,15 @@ export function adventMain(input: string): any {
 
     distance[start[0]]![start[1]] = 0;
     let cellsToPaintNext: [number, number][] = [];
-    cellsToPaintNext.push(start);
+
+    for(let row = 0; row < lines.length; row++) {
+        for (let col = 0; col < lines[0]!.length; col++) {
+            if(heights[row]![col]! === 1) {
+                cellsToPaintNext.push([row, col]);
+                distance[row]![col] = 0;
+            }
+        }
+    }
 
     while(cellsToPaintNext.length > 0) {
         cellsToPaintNext = cellsToPaintNext.concat(paintNeighbors(cellsToPaintNext[0]!, heights, distance));
