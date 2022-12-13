@@ -1,12 +1,16 @@
 // https://adventofcode.com/2022/day/13
 
-import { exit } from "process";
-
 export function adventMain(input: string): any {
     const lines = input.split('\n');
+    
+    // Part 2:
+    lines.push('[[2]]');
+    lines.push('[[6]]');
+    
     let indeciesSum = 0;
     let index = 1;
 
+    // Part 1:
     for(let i = 0; i < lines.length - 1; i+=3) {
         let leftPac = JSON.parse(lines[i]!);
         let ritePac = JSON.parse(lines[i+1]!);
@@ -16,7 +20,23 @@ export function adventMain(input: string): any {
         }
         index++;
     }
-    return indeciesSum;
+    // return indeciesSum; // Part 1
+
+    // Part 2:
+    let allLines = lines.filter(line => line);
+    let sortedLines = allLines.sort((a, b) => (-1 * compareArrays(Object.values(JSON.parse(a)), Object.values(JSON.parse(b)))));
+    let index1 = 0;
+    let index2 = 0;
+    for (let i = 0; i < sortedLines.length; i++) {
+        if(sortedLines[i] === '[[2]]') {
+            index1 = i+1;
+        }
+        if(sortedLines[i] === '[[6]]') {
+            index2 = i+1;
+            break;
+        }
+    }
+    return index1 * index2;
 }
 
 function compareArrays(leftPac: any, ritePac: any): number {
