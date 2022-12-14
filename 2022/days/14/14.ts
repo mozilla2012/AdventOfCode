@@ -6,7 +6,7 @@ const VOID = 0;
 
 export function adventMain(input: string): any {
     const lines = input.split('\n');
-    // First, read in all lines. Find the smallest and largest X and Y values.
+    // First, read in all lines. Find the largest X and Y values.
     let maxRow = 0;
     let maxCol = 0;
     let rockFormations: number[][][] = [];
@@ -23,6 +23,18 @@ export function adventMain(input: string): any {
         }
         rockFormations.push(rockLine);
     }
+
+    // Part 2
+    maxCol = 999999; 
+    rockFormations.push(
+        [
+            [0, maxRow+2],
+            [maxCol, maxRow+2]
+        ]
+    );
+    maxRow = maxRow+2;
+    // end Part 2
+
     // Then initialize a grid of size maxRow * maxCol and draw the rock lines.
     let cave: number[][] = [];
 
@@ -67,9 +79,8 @@ function drawRockLines(cave: number[][], rockFormations: number[][][]): number[]
     }
     return cave;
 }
-function simulateCave(cave: number[][]): number {
-    
-    let iterations = 0;
+
+function simulateCave(cave: number[][]): number {    
     const sandOriginRow = 0;
     const sandOriginCol = 500;
     while(true) { // Generate sand constantly
@@ -77,8 +88,8 @@ function simulateCave(cave: number[][]): number {
         let sandCol = sandOriginCol;
 
         while(true) { // Move the sand until it stops or falls off
-            if(sandRow + 1 === cave.length) {
-                // WE HAVE SAND FALLING OFF! 
+            if(sandRow + 1 === cave.length || cave[sandOriginRow]![sandOriginCol] === SAND) {
+                // WE HAVE SAND FALLING OFF! OR WE'RE PLUGGED UP!
                 return countSand(cave);
             }
             if(cave[sandRow+1]![sandCol] === VOID) { // can move straight down, do so
