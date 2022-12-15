@@ -4,6 +4,7 @@ let minX: number;
 let minY: number;
 let maxX: number;
 let maxY: number;
+let xOff: number;
 let yOff: number;
 
 export function adventMain(input: string): any {
@@ -11,6 +12,7 @@ export function adventMain(input: string): any {
     minY = 0;
     maxX = 0;
     maxY = 0;
+    xOff = 0;
     yOff = 0;
     const lines = input.split('\n');
 
@@ -41,13 +43,6 @@ export function adventMain(input: string): any {
     maxX = allX.reduce((a, b) => Math.max(a, b));
     maxY = allY.reduce((a, b) => Math.max(a, b));
 
-    const distX = Math.abs(maxX - minX);
-    const distY = Math.abs(maxY - minY);
-    const bonusSpace = distX + distY;
-
-    minX -= bonusSpace;
-    minY -= bonusSpace;
-
     // Normalize all points.
     for(let pair of allSensorBeaconPairs) {
         for(let i = 0; i < 2; i++) {
@@ -58,24 +53,73 @@ export function adventMain(input: string): any {
     }
 
     yOff = minY * -1;
-    maxX += (bonusSpace) - minX;
-    maxY += (bonusSpace) - minY;
+    xOff = minX * -1;
+    maxX -= minX;
+    maxY -= minY;
 
     populateDistances(allSensorBeaconPairs);
 
-    const targetRow = 2000000 + yOff;
-        let voids = 0;
-        for(let col = 0; col < maxX; col++) {
-            for(let pair of allSensorBeaconPairs) {
-                let sensor = pair[0];
-                let distanceToPoint = Math.abs(sensor[0]-col) + Math.abs(sensor[1]-targetRow);
-                if(distanceToPoint <= pair[2]) {
-                    voids++;
-                    break;
+    const searchRange = 4000000;
+    const maxSearchX = searchRange + xOff;
+    const maxSearchY = searchRange + yOff;
+
+    for(let pair of allSensorBeaconPairs) {
+        const sensor = pair[0];
+        const distance = pair[2];
+        let col = sensor[0] - (distance+1);
+        // Search each side of the diamond's edge.
+        for(let row = sensor[1]; row <= (sensor[1] + distance +1); row++) { // LEFT TO BOTTOM
+            if(row >= 0+yOff && row <= maxSearchY && col >= 0+xOff && col <= maxSearchX) {
+                let val = searchPoint(row, col,  allSensorBeaconPairs);
+                if(val !== 0 ){
+                    return val;
                 }
             }
+            col++;
         }
-    return voids-1;
+        col = sensor[0] - (distance+1);
+        for(let row = sensor[1]; row <= sensor[1]-(distance+1); row--) { // LEFT TO TOP
+            if(row >= 0+yOff && row <= maxSearchY && col >= 0+xOff && col <= maxSearchX) {
+                let val = searchPoint(row, col,  allSensorBeaconPairs);
+                if(val !== 0 ){
+                    return val;
+                }
+            }
+            col++;
+        }
+        col = sensor[0] + (distance+1);
+        for(let row = sensor[1]; row <= (sensor[1] + distance +1); row++) { // RIGHT TO BOTTOM
+            if(row >= 0+yOff && row <= maxSearchY && col >= 0+xOff && col <= maxSearchX) {
+                let val = searchPoint(row, col,  allSensorBeaconPairs);
+                if(val !== 0 ){
+                    return val;
+                }
+            }
+            col--;
+        }
+        col = sensor[0] + (distance+1);
+        for(let row = sensor[1]; row <= sensor[1]-(distance+1); row--) { // RIGHT TO TOP
+            if(row >= 0+yOff && row <= maxSearchY && col >= 0+xOff && col <= maxSearchX) {
+                let val = searchPoint(row, col,  allSensorBeaconPairs);
+                if(val !== 0 ){
+                    return val;
+                }
+            }
+            col--;
+        }
+    }
+}
+
+function searchPoint(row: number, col: number, allSensorBeaconPairs: [[number, number], [number, number], number][]) {
+    for(let pair of allSensorBeaconPairs) {
+        let sensor = pair[0];
+        let distanceToPoint = Math.abs(sensor[0]-col) + Math.abs(sensor[1]-row);
+        if(distanceToPoint <= pair[2]) {
+            return 0;
+        } 
+    }
+    console.log(`NOT A VOID: [${row-yOff} ${col-xOff}]`);
+    return (row-yOff) + ((col-xOff)*4000000);
 }
 
 function populateDistances(allSensorBeaconPairs: [[number, number], [number, number], number][]) {
