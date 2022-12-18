@@ -1,40 +1,76 @@
 // https://adventofcode.com/2022/day/0
 
+const UNKNOWN = 2;
+const ROCK = 0;
+const AIR = 1;
+const MAX = 21;
 export function adventMain(input: string): any {
     const lines = input.split('\n');
-    let voxels: [number, number, number][] = [];
+    
+    let grid: number[][][] = [];
+    for(let x = 0; x <= MAX; x++) {
+        let square = [];
+        for(let y = 0; y <= MAX; y++) {
+            let line = [];
+            for(let z = 0; z <= MAX; z++) {
+                line.push(UNKNOWN);
+            }
+            square.push(line);
+        }
+        grid.push(square);
+    }
+
     for(let line of lines) {
         let v: string[] = line.split(',');
-        voxels.push([parseInt(v[0]!), parseInt(v[1]!), parseInt(v[2]!)]);
+        let x = parseInt(v[0]!)+1;
+        let y = parseInt(v[1]!)+1;
+        let z = parseInt(v[2]!)+1;
+        grid[x]![y]![z]! = ROCK;
     }
-    return getSurfaceArea(voxels);
+    return getSurfaceArea(grid);
 }
 
-function getSurfaceArea(voxels: [number, number, number][]): number {
+function getSurfaceArea(grid: number[][][]): number {
     let sa = 0;
-    for(let voxel of voxels) {
-        let vsa = 6;
-        for (let neighbor of voxels) {
-            if(areNeighbors(voxel, neighbor)) {
-                vsa -= 1;
-                if(vsa === 0) {
-                    break;
-                }
+    for(let x = 0; x <= MAX; x++) {
+        fillInAir(grid[x]!);
+        // printSquare(grid[x]!);
+    }
+    for(let x = 0; x <= MAX; x++) {
+        for(let y = 0; y <= MAX; y++) {
+            for(let z = 0; z <= MAX; z++) {
+                sa += calcSa(x, y, z, grid);
             }
         }
-        sa += vsa;
     }
     return sa;
 }
 
-function areNeighbors(v1: [number, number, number], v2: [number, number, number]): boolean {
-    return (
-        (v1[0] === v2[0] && v1[1] === v2[1] && v1[2] === v2[2] - 1) ||
-        (v1[0] === v2[0] && v1[1] === v2[1] && v1[2] === v2[2] + 1) ||
-        (v1[0] === v2[0] && v1[1] === v2[1] - 1 && v1[2] === v2[2]) ||
-        (v1[0] === v2[0] && v1[1] === v2[1] + 1 && v1[2] === v2[2]) ||
-        (v1[0] === v2[0] - 1 && v1[1] === v2[1] && v1[2] === v2[2]) ||
-        (v1[0] === v2[0] + 1 && v1[1] === v2[1] && v1[2] === v2[2])
-    );
+function fillInAir(sq: number[][]) {
+    sq[0]![0] = AIR;
+    for(let x = 0; x <= MAX; x++) {
+        for(let y = 0; y <= MAX; y++) {
+            if (shouldBeAir(x, y, sq)) {
+                sq[x]![y] = AIR;
+            }
+        }
+    }
 }
 
+function shouldBeAir(x: number, y: number, sq: number[][]): boolean {
+    return (sq[x]![y]! === UNKNOWN);
+}
+
+function calcSa(x: number, y: number, z: number, grid: number[][][]): number {
+    if(grid[x]![y]![z]! !== ROCK) {
+        return 0;
+    }
+    let sa = 0;
+    if (grid[x]![y]![z-1]! === AIR) { sa++; }
+    if (grid[x]![y]![z+1]! === AIR) { sa++; }
+    if (grid[x]![y-1]![z]! === AIR) { sa++; }
+    if (grid[x]![y+1]![z]! === AIR) { sa++; }
+    if (grid[x-1]![y]![z]! === AIR) { sa++; }
+    if (grid[x+1]![y]![z]! === AIR) { sa++; }
+    return sa;
+}
