@@ -1,4 +1,3 @@
-import { AssertionError } from "assert";
 import * as fs from 'fs';
 
 async function runner() {
