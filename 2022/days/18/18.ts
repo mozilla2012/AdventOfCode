@@ -1,4 +1,4 @@
-// https://adventofcode.com/2022/day/0
+// https://adventofcode.com/2022/day/18
 
 const UNKNOWN = 2;
 const ROCK = 0;
