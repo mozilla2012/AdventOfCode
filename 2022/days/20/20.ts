@@ -14,27 +14,18 @@ export function adventMain(input: string): any {
     for(let x = 0; x < iterations; x++) {
         for(let i = 0; i < numbers.length; i++) {
             let numberToMove: [number, [number, number]] = findNumberForIndex(i, pairs);
-            let currentIndex: number = numberToMove[0];
-            let value: number = numberToMove[1]![1];
-            let newIndex = (currentIndex + value);
-            let isNegative = false;
-            if (value < 0) {
-                newIndex = (numbers.length - currentIndex - 1) - value;
-                isNegative = true;
-            }
-
+            let newIndex = (numberToMove[1]![1] < 0) 
+            ? ((numbers.length - numberToMove[0] - 1) - numberToMove[1]![1]) 
+            : (numberToMove[0] + numberToMove[1]![1]);
             while (newIndex >= numbers.length) {
                 newIndex = (newIndex % numbers.length) + (Math.floor(newIndex/numbers.length));
             }
-            if (isNegative) {
-                newIndex = (numbers.length - newIndex - 1);
-            }
-
-            pairs.splice(currentIndex, 1); // Remove from array
-            pairs.splice(newIndex, 0, [i, value]); // Add at the new index.
+            newIndex = (numberToMove[1]![1] < 0) ? (numbers.length - newIndex - 1) : newIndex;
+            pairs.splice(numberToMove[0], 1); // Remove from array
+            pairs.splice(newIndex, 0, [i, numberToMove[1]![1]]); // Add at the new index.
         }
     }
-
+    // After mixing the list, figure out where the zero is.
     let zeroIndex = -1;
     for(let i = 0; i < pairs.length; i++) {
         if (pairs[i]![1] === 0) {
@@ -43,13 +34,12 @@ export function adventMain(input: string): any {
         }
     }
 
-    let _1000 = pairs[(zeroIndex + 1000) % numbers.length]![1]; 
-    let _2000 = pairs[(zeroIndex + 2000) % numbers.length]![1]; 
-    let _3000 = pairs[(zeroIndex + 3000) % numbers.length]![1];
-    return _1000 + _2000 + _3000; // Part 1 === 3466
+    return pairs[(zeroIndex + 1000) % numbers.length]![1] 
+         + pairs[(zeroIndex + 2000) % numbers.length]![1] 
+         + pairs[(zeroIndex + 3000) % numbers.length]![1];
 }
 
-function findNumberForIndex(index: number, pairs: [number, number][]): [number, [number, number]] {
+function findNumberForIndex(index: number, pairs: [number, number][]): [number, [number, number]] {    
     for(let i = 0; i < pairs.length; i++) {
         if (pairs[i]![0] === index) {
             return [i, pairs[i]!];
