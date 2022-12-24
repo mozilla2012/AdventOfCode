@@ -11,3 +11,4 @@ export function adventMain(input: string): any {
     }
     return -1;
 }
+ 
