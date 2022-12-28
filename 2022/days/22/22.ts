@@ -5,8 +5,8 @@ import { exit } from "process";
 const VOID = 0;
 const OPEN = 1;
 const WALL = 2;
-const ROWS = 20;//201; 
-const COLS = 20;//151;
+const ROWS = 201; 
+const COLS = 151;
 const RIGHT = 0;
 const DOWN = 1;
 const LEFT = 2;
@@ -14,10 +14,6 @@ const UP = 3;
 let curRow: number;
 let curCol: number;
 let curDir: number;
-
-
-// TODO - well this looks like it works. But it needs debugging. 
-
 
 export function adventMain(input: string): any {
     // First, make a grid that is ROWS x COLS.
@@ -60,17 +56,11 @@ export function adventMain(input: string): any {
     }
 
     while(true) {
-        console.log(instructions);
         let distanceMatch = instructions.match(/([0-9]+)*/);
         let distance = parseInt(distanceMatch![1]!);
-        console.log('Moving: ' + distance);
         instructions = instructions.slice(`${distance}`.length);
-        console.log('before move')
-        printGrid(grid);       
 
-        while(distance-- > 0 && moveIfPossibleCube(grid)) {
-            printGrid(grid);
-        }
+        while(distance-- > 0 && moveIfPossibleCube(grid));
         
         // If no direction, then break.
         if(instructions.length <= 0) {
@@ -80,14 +70,11 @@ export function adventMain(input: string): any {
         // Then parse and set direction (get next char)
         let newDir = `${instructions}`.charAt(0);
         instructions = instructions.slice(1);
-        console.log('Rotating:' + newDir);
         if (newDir === 'R') {
             curDir = (curDir === 3) ? 0 : (curDir + 1);
         } else {
             curDir = (curDir === 0) ? 3 : (curDir - 1);
         }
-
-        console.log('Now facing:' + curDir);
     }
 
     // Calculate the return value
@@ -139,160 +126,155 @@ function moveIfPossibleCube(grid: number[][]): boolean {
     exit();
 }
 
+// function translateToNewSideTest(grid: number[][]) {
+//     if(curRow === 0 && curDir === UP) { // Side 1 -> 12
+//         curDir = DOWN;
+//         curRow = 4;
+//         let edgeIndex = curCol % 4;
+//         curCol = (4-1) - edgeIndex;
+//     } else if (curRow < 4 && curCol === (12-1) && curDir === RIGHT) { // Side 2 -> 5
+//         curDir = LEFT;
+//         curCol = (16-1);
+//         let edgeIndex = curRow % 4;
+//         curRow = (12-1) - edgeIndex;
+//     } else if (curRow >= 4  && curCol === (12-1) && curDir === RIGHT) { // Side 3 -> 4
+//         curDir = DOWN;
+//         let edgeIndex = curRow % 4;
+//         curCol = (16-1) - edgeIndex;
+//         curRow = 8;
+//     } else if (curRow === 8 && curDir === UP) { // Side 4 -> 3
+//         curDir = LEFT;
+//         let edgeIndex = curCol % 4;
+//         curRow = (8-1) - edgeIndex;
+//         curCol = (12-1);
+//     } else if (curCol === (16-1) && curDir === RIGHT) { // Side 5 -> 2
+//         curDir = LEFT;
+//         curCol = (12-1);
+//         let edgeIndex = curRow % 4;
+//         curRow = (4-1) - edgeIndex;
+//     } else if (curRow === (12-1) && curCol >= 12 && curDir === DOWN) { // Side 6 -> 11
+//         curDir = RIGHT;
+//         let edgeIndex = curCol % 4;
+//         curRow = (8-1) - edgeIndex; 
+//         curCol = 0;
+//     } else if (curRow === (12-1) && curCol <  12 && curDir === DOWN) { // Side 7 -> 10
+//         curDir = UP;
+//         let edgeIndex = curCol % 4;
+//         curCol = (4-1) - edgeIndex; 
+//         curRow = (8-1);
+//     } else if (curRow < 4 && curCol === 8 && curDir === LEFT) { // Side 8 -> 9
+//         curDir = UP;
+//         let edgeIndex = curRow % 4;
+//         curCol = (8-1) - edgeIndex; 
+//         curRow = (8-1);
+//     } else if (curRow === (8-1)  && curCol >=  4 && curDir === DOWN) { // Side 9 -> 8
+//         curDir = RIGHT;
+//         let edgeIndex = curCol % 4;
+//         curRow = (12-1) - edgeIndex; 
+//         curCol = (8-1);
+//     } else if (curRow === (8-1)  && curCol <   4 && curDir === DOWN) { // Side 10 -> 7
+//         curDir = UP;
+//         let edgeIndex = curCol % 4;
+//         curCol = (12-1) - edgeIndex; 
+//         curRow = (12-1);
+//     } else if (curCol === 0 && curDir === LEFT) { // Side 11 -> 6
+//         curDir = UP;
+//         let edgeIndex = curRow % 4;
+//         curCol = (16-1) - edgeIndex; 
+//         curRow = (12-1);
+//     } else if (curRow === 4 && curCol < 4 && curDir === UP) { // Side 12 -> 1
+//         curDir = DOWN;
+//         let edgeIndex = curCol % 4;
+//         curCol = (12-1) - edgeIndex; 
+//         curRow = 0;
+//     } else if (curRow === 4 && curCol >= 4 && curDir === UP) { // Side 13 -> 14
+//         curDir = RIGHT;
+//         let edgeIndex = curCol % 4;
+//         curRow = edgeIndex; 
+//         curCol = 8;
+//     } else if (curRow >= 8 && curCol === 8 && curDir === LEFT) { // Side 14 -> 13
+//         curDir = DOWN;
+//         let edgeIndex = curRow % 4;
+//         curCol = (8-1) - edgeIndex; 
+//         curRow = 4;
+//     } else {
+//         console.log(`Unknown rollover! Currently at [${curRow},${curCol}], heading ${curDir}`);
+//     }
+// }
+
 function translateToNewSide(grid: number[][]) {
     
-    if(curRow === 0 && curDir === UP) { // Side 1 -> 12
-        curDir = DOWN;
-        curRow = 4;
-        let edgeIndex = curCol % 4;
-        curCol = (4-1) - edgeIndex;
-    } else if (curRow < 4 && curCol === (12-1) && curDir === RIGHT) { // Side 2 -> 5
-        curDir = LEFT;
-        curCol = (16-1);
-        let edgeIndex = curRow % 4;
-        curRow = (12-1) - edgeIndex;
-    } else if (curRow >= 4  && curCol === (12-1) && curDir === RIGHT) { // Side 3 -> 4
-        curDir = DOWN;
-        let edgeIndex = curRow % 4;
-        curCol = (16-1) - edgeIndex;
-        curRow = 8;
-    } else if (curRow === 8 && curDir === UP) { // Side 4 -> 3
-        curDir = LEFT;
-        let edgeIndex = curCol % 4;
-        curRow = (8-1) - edgeIndex;
-        curCol = (12-1);
-    } else if (curCol === (16-1) && curDir === RIGHT) { // Side 5 -> 2
-        curDir = LEFT;
-        curCol = (12-1);
-        let edgeIndex = curRow % 4;
-        curRow = (4-1) - edgeIndex;
-    } else if (curRow === (12-1) && curCol >= 12 && curDir === DOWN) { // Side 6 -> 11
+    if(curRow === 0 && curCol < 100 && curDir === UP) { // Side 1 -> 10
         curDir = RIGHT;
-        let edgeIndex = curCol % 4;
-        curRow = (8-1) - edgeIndex; 
+        let edgeIndex = curCol % 50;
+        curRow = 150 + edgeIndex; 
         curCol = 0;
-    } else if (curRow === (12-1) && curCol <  12 && curDir === DOWN) { // Side 7 -> 10
+    } else if (curRow === 0 && curCol >= 100 && curDir === UP) { // Side 2 -> 9
         curDir = UP;
-        let edgeIndex = curCol % 4;
-        curCol = (4-1) - edgeIndex; 
-        curRow = (8-1);
-    } else if (curRow < 4 && curCol === 8 && curDir === LEFT) { // Side 8 -> 9
+        let edgeIndex = curCol % 50;
+        curCol = 0 + edgeIndex; // Not sure if this should be inverted...
+        curRow = (200-1);
+    } else if (curCol === (150-1) && curDir === RIGHT) { // Side 3 -> 6
+        curDir = LEFT;
+        let edgeIndex = curRow % 50;
+        curRow = (150-1) - edgeIndex; 
+        curCol = (100-1);
+    } else if (curRow === (50-1) && curDir === DOWN) { // Side 4 -> 5
+        curDir = LEFT;
+        let edgeIndex = curCol % 50;
+        curRow = 50 + edgeIndex; 
+        curCol = (100-1);
+    } else if (curRow < 100 && curCol === (100-1) && curDir === RIGHT) { // Side 5 -> 4
         curDir = UP;
-        let edgeIndex = curRow % 4;
-        curCol = (8-1) - edgeIndex; 
-        curRow = (8-1);
-    } else if (curRow === (8-1)  && curCol >=  4 && curDir === DOWN) { // Side 9 -> 8
-        curDir = RIGHT;
-        let edgeIndex = curCol % 4;
-        curRow = (12-1) - edgeIndex; 
-        curCol = (8-1);
-    } else if (curRow === (8-1)  && curCol <   4 && curDir === DOWN) { // Side 10 -> 7
+        let edgeIndex = curRow % 50;
+        curCol = 100 + edgeIndex; 
+        curRow = (50-1);
+    } else if (curRow >= 100 && curCol === (100-1) && curDir === RIGHT) { // Side 6 -> 3
+        curDir = LEFT;
+        let edgeIndex = curRow % 50;
+        curRow = (50-1) - edgeIndex; 
+        curCol = (150-1);
+    } else if (curRow === (150-1) && curCol > 40 && curDir === DOWN) { // Side 7 -> 8
+        curDir = LEFT;
+        let edgeIndex = curCol % 50;
+        curRow = 150 + edgeIndex; 
+        curCol = (50-1);
+    } else if (curRow > 140 && curCol === (50-1) && curDir === RIGHT) { // Side 8 -> 7
         curDir = UP;
-        let edgeIndex = curCol % 4;
-        curCol = (12-1) - edgeIndex; 
-        curRow = (12-1);
-    } else if (curCol === 0 && curDir === LEFT) { // Side 11 -> 6
-        curDir = UP;
-        let edgeIndex = curRow % 4;
-        curCol = (16-1) - edgeIndex; 
-        curRow = (12-1);
-    } else if (curRow === 4 && curCol < 4 && curDir === UP) { // Side 12 -> 1
+        let edgeIndex = curRow % 50;
+        curCol = 50 + edgeIndex; 
+        curRow = (150-1);
+    } else if (curRow === (200-1) && curDir === DOWN) { // Side 9 -> 2
         curDir = DOWN;
-        let edgeIndex = curCol % 4;
-        curCol = (12-1) - edgeIndex; 
+        let edgeIndex = curCol % 50;
+        curCol = 100 + edgeIndex; 
         curRow = 0;
-    } else if (curRow === 4 && curCol >= 4 && curDir === UP) { // Side 13 -> 14
-        curDir = RIGHT;
-        let edgeIndex = curCol % 4;
-        curRow = edgeIndex; 
-        curCol = 8;
-    } else if (curRow >= 8 && curCol === 8 && curDir === LEFT) { // Side 14 -> 13
+    } else if (curRow >= 150 && curCol === 0 && curDir === LEFT) { // Side 10 -> 1
         curDir = DOWN;
-        let edgeIndex = curRow % 4;
-        curCol = (8-1) - edgeIndex; 
-        curRow = 4;
+        let edgeIndex = curRow % 50;
+        curCol = 50 + edgeIndex; 
+        curRow = 0;
+    } else if (curRow < 150 && curCol === 0 && curDir === LEFT) { // Side 11 -> 14
+        curDir = RIGHT;
+        let edgeIndex = curRow % 50;
+        curRow = (50-1) - edgeIndex; 
+        curCol = 50;
+    } else if (curRow === 100 && curDir === UP) { // Side 12 -> 13
+        curDir = RIGHT;
+        let edgeIndex = curCol % 50;
+        curRow = 50 + edgeIndex; 
+        curCol = 50;
+    } else if (curRow >= 50 && curCol === 50 && curDir === LEFT) { // Side 13 -> 12
+        curDir = DOWN;
+        let edgeIndex = curRow % 50;
+        curCol = 0 + edgeIndex; 
+        curRow = 100;
+    } else if (curRow < 50 && curCol === 50 && curDir === LEFT) { // Side 14 -> 11
+        curDir = RIGHT;
+        let edgeIndex = curRow % 50;
+        curRow = (150-1) - edgeIndex; 
+        curCol = 0;
     } else {
         console.log(`Unknown rollover! Currently at [${curRow},${curCol}], heading ${curDir}`);
     }
-}
-
-// I'm pretty sure this all needs to be changed for Part 2.
-// function moveIfPossible(grid: number[][]): boolean {
-//     if(curDir === UP) {
-//         let newRow: number = curRow;
-//         if (newRow === 0 || grid[(newRow - 1)]![curCol] === VOID) {
-//             while (newRow < ROWS && grid[++newRow]![curCol] !== VOID);
-//             if (newRow === ROWS) {
-//                 newRow++;
-//             }
-//         }
-//         if (grid[(newRow - 1)]![curCol] === WALL) {
-//             return false;
-//         }
-//         if (grid[(newRow - 1)]![curCol] === OPEN) {
-//             curRow = newRow - 1;
-//             return true;
-//         }
-//     } else if(curDir === LEFT) {
-//         let newCol: number = curCol;
-//         if (newCol === 0 || grid[curRow]![(newCol - 1)] === VOID) {
-//             while (newCol < COLS && grid[curRow]![++newCol] !== VOID);
-//             if (newCol === COLS) {
-//                 newCol++;
-//             }
-//         }
-//         if (grid[curRow]![(newCol - 1)] === WALL) {
-//             return false;
-//         }
-//         if (grid[curRow]![(newCol - 1)] === OPEN) {
-//             curCol = newCol - 1;
-//             return true;
-//         }
-//     } else if(curDir === DOWN) {
-//         let newRow: number = curRow;
-//         if (newRow === ROWS || grid[(newRow + 1)]![curCol] === VOID) {
-//             while (newRow > 0 && grid[--newRow]![curCol] !== VOID);
-//             if (newRow === 0) {
-//                 newRow--;
-//             }
-//         }
-//         if (grid[(newRow + 1)]![curCol] === WALL) {
-//             return false;
-//         }
-//         if (grid[(newRow + 1)]![curCol] === OPEN) {
-//             curRow = newRow + 1;
-//             return true;
-//         }
-//     } else if(curDir === RIGHT) {
-//         let newCol: number = curCol;
-//         if (newCol === COLS || grid[curRow]![(newCol + 1)] === VOID) {
-//             while (newCol > 0 && grid[curRow]![--newCol] !== VOID);
-//             if (newCol === 0) {
-//                 newCol--;
-//             }
-//         }
-//         if (grid[curRow]![(newCol + 1)] === WALL) {
-//             return false;
-//         }
-//         if (grid[curRow]![(newCol + 1)] === OPEN) {
-//             curCol = newCol + 1;
-//             return true;
-//         }
-//     }
-//     console.log('Error')
-//     exit();
-// }
-function printGrid(grid: number[][]) {
-    for(let row = 0; row < ROWS; row++) {
-        let rowToPrint = [];
-        for(let col = 0; col < COLS; col++) {
-            if (row === curRow && col === curCol) {
-                rowToPrint.push('A');
-            } else {
-                rowToPrint.push(`${grid[row]![col]}`.replace(`${VOID}`, 'x').replace(`${OPEN}`, '.').replace(`${WALL}`, '#'));
-            }
-        }   
-        console.log(rowToPrint.join(''));
-    }
-    console.log('');
 }
