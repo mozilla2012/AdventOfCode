@@ -25,7 +25,7 @@ The targets in `package.json` are set up nicely. Target `buildrun` does a clean 
 
 1. Check out this package
 1. Ensure you have `npm` installed
-1. Run `npm install typescript` (since for some reason `npm install` doesn't handle that for you)
+1. Run `npm install typescript` if it complains
 1. Run the command in the 
 
 ## Todo:
