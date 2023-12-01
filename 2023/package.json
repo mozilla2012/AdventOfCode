@@ -23,7 +23,8 @@
     "homepage": "https://github.com/mozilla2012/adventOfCode#readme",
     "dependencies": {
         "@types/node": "^18.11.10",
-        "tsc": "^2.0.4"
+        "tsc": "^2.0.4",
+        "TypeScript": "npm:typescript@^4.9.5"
     },
     "devDependencies": {
         "typescript": "^4.9.4"
