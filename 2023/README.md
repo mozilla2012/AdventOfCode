@@ -26,7 +26,7 @@ The targets in `package.json` are set up nicely. Target `buildrun` does a clean 
 1. Check out this package
 1. Ensure you have `npm` installed
 1. Run `npm install typescript` if it complains
-1. Run the command in the 
+1. Run the command in the `Running` section above.
 
 ## Todo:
 1. Add puzzle.txt to .gitignore. I shouldn't be committing that.
