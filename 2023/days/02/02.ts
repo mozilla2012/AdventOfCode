@@ -4,32 +4,18 @@ export function adventMain(input: string): any {
     const lines = input.split('\n');
     let powerSum = 0;
     for(let line of lines) {
-        const game: string = (line.split(':')[1]!);
-        const rounds: string[] = game.split(';');
         let maxR = 0, maxG = 0, maxB = 0;
-        for (let round of rounds) {
-            const colorStrings: string[] = round.split(',').map((color) => color.trim());
-            for (let color of colorStrings) {
+        for (let round of line.split(':')[1]!.split(';')) {
+            for (let color of round.split(',').map((color) => color.trim())) {
                 if (color.includes('red')) {
-                    const numR = Number(color.split(' ')[0]!);
-                    if(numR > maxR) {
-                        maxR = numR;
-                    }
+                    maxR = Math.max(maxR, Number(color.split(' ')[0]!))
                 } else if (color.includes('green')) {
-                    const numG = Number(color.split(' ')[0]!);
-                    if(numG > maxG) {
-                        maxG = numG;
-                    }
+                    maxG = Math.max(maxG, Number(color.split(' ')[0]!))
                 } else { // if (color.includes('blue')) {
-                    const numB = Number(color.split(' ')[0]!);
-                    if(numB > maxB) {
-                        maxB = numB;
-                    }
+                    maxB = Math.max(maxB, Number(color.split(' ')[0]!))
                 }
             }
         }
-        const power = maxR * maxG * maxB;
-        console.log(power, maxR, maxG, maxB);
         powerSum += maxR * maxG * maxB;
     }
     return powerSum;
