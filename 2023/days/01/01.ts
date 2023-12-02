@@ -1,4 +1,4 @@
-// https://adventofcode.com/2023/day/0
+// https://adventofcode.com/2023/day/1
 
 const FIRST_NON_DIGIT_ASCII = 58;
 
