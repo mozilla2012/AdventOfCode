@@ -1,18 +1,6 @@
 // https://adventofcode.com/2023/day/6
 
-export function adventMain(input: string): any {
-    const lines = input.split('\n');
-    let time: number = parseInt(lines[0]!.split(':')[1]!.trim().replaceAll(' ', ''));
-    let distance: number = parseInt(lines[1]!.split(':')[1]!.trim().replaceAll(' ', ''));
-    let options: number = 0;
-
-    for(let i = 0; i < time; i++) {
-        if (i * (time - i) > distance) {
-            options++;
-        }
-    }
-    return options;
-}
+export const adventMain = (n:string)=>new Array(parseInt(n.split('\n')[0]!.split(':')[1]!.replaceAll(' ',''))).fill(null).map((_,i)=>i+1).filter(i=>i*(parseInt(n.split('\n')[0]!.split(':')[1]!.replaceAll(' ',''))-i)>parseInt(n.split('\n')[1]!.split(':')[1]!.replaceAll(' ', '')) ).length;
 
 // Part 1
 // export function adventMain(input: string): any {
