@@ -1,4 +1,4 @@
-// https://adventofcode.com/2023/day/0
+// https://adventofcode.com/2023/day/9
 
 export function adventMain(input: string): any {
     const lines = input.split('\n');
@@ -14,7 +14,6 @@ export function adventMain(input: string): any {
             }
             sequences.push(newSequence);
         }
-
         for(let i = sequences.length - 1; i > 0; i--) { // Figure out what value to add
             const lowerSequence: number[] = sequences[i]!;
             const increase: number = lowerSequence[0]!;
@@ -26,7 +25,7 @@ export function adventMain(input: string): any {
     return sum;
 }
 
-
+// Part 1
 // export function adventMain(input: string): any {
 //     const lines = input.split('\n');
 //     let sum = 0;
