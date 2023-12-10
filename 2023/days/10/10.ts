@@ -72,39 +72,23 @@ function floodFillBothSides(iter: number[], visited: string[][], symbol: string)
     const dir: number = iter[2]!;
     switch(symbol) { // Assuming we're going counter clockwise. 1 is inside, 2 is outside.
         case 'F': {
-            floodFill(visited, row-1, col-1, (dir === LEFT) ? '2' : '1');
             floodFill(visited, row-1, col,   (dir === LEFT) ? '2' : '1');
-            floodFill(visited, row-1, col+1, (dir === LEFT) ? '2' : '1');
             floodFill(visited, row,   col-1, (dir === LEFT) ? '2' : '1');
-            floodFill(visited, row+1, col-1, (dir === LEFT) ? '2' : '1');
-            floodFill(visited, row+1, col+1, (dir === LEFT) ? '1' : '2');
             break;
         }
         case 'L': {
-            floodFill(visited, row-1, col-1, (dir === DOWN) ? '2' : '1');
-            floodFill(visited, row-1, col+1, (dir === DOWN) ? '1' : '2');
             floodFill(visited, row,   col-1, (dir === DOWN) ? '2' : '1');
-            floodFill(visited, row+1, col-1, (dir === DOWN) ? '2' : '1');
             floodFill(visited, row+1, col,   (dir === DOWN) ? '2' : '1');
-            floodFill(visited, row+1, col+1, (dir === DOWN) ? '2' : '1');
             break;
         }
         case 'J': {
-            floodFill(visited, row-1, col-1, (dir === RIGHT) ? '1' : '2');
-            floodFill(visited, row-1, col+1, (dir === RIGHT) ? '2' : '1');
             floodFill(visited, row,   col+1, (dir === RIGHT) ? '2' : '1');
-            floodFill(visited, row+1, col-1, (dir === RIGHT) ? '2' : '1');
             floodFill(visited, row+1, col,   (dir === RIGHT) ? '2' : '1');
-            floodFill(visited, row+1, col+1, (dir === RIGHT) ? '2' : '1');
             break;
         }
         case '7': { 
-            floodFill(visited, row-1, col-1, (dir === UP) ? '2' : '1');
             floodFill(visited, row-1, col,   (dir === UP) ? '2' : '1');
-            floodFill(visited, row-1, col+1, (dir === UP) ? '2' : '1');
             floodFill(visited, row,   col+1, (dir === UP) ? '2' : '1');
-            floodFill(visited, row+1, col-1, (dir === UP) ? '1' : '2');
-            floodFill(visited, row+1, col+1, (dir === UP) ? '2' : '1');
             break;
         }
         case '-': {
@@ -120,20 +104,14 @@ function floodFillBothSides(iter: number[], visited: string[][], symbol: string)
     }
 }
 
-function floodFill(visited: string[][], row: number, col: number, symbolToFill: string) { // Given a position and a symbol, flood fill all unvisited nodes around it
-    if (row < 0 || col < 0 || row >= visited.length || col >= visited[0]!.length) {
-        return;
-    }
-    if (visited[row]![col]! === UNVISITED) {
+function floodFill(visited: string[][], row: number, col: number, symbolToFill: string) { // Given a position and a symbol, flood fill all unvisited nodes around it    
+    if (!(row < 0 || col < 0 || row >= visited.length || col >= visited[0]!.length) && visited[row]![col]! === UNVISITED) {
         visited[row]![col]! = symbolToFill;
-        floodFill(visited, row-1, col-1, symbolToFill);
-        floodFill(visited, row-1, col,   symbolToFill);
-        floodFill(visited, row-1, col+1, symbolToFill);
-        floodFill(visited, row,   col-1, symbolToFill);
-        floodFill(visited, row,   col+1, symbolToFill);
-        floodFill(visited, row+1, col-1, symbolToFill);
-        floodFill(visited, row+1, col,   symbolToFill);
-        floodFill(visited, row+1, col+1, symbolToFill);
+        for(let x = -1; x <= 1; x++) {
+            for(let y = -1; y <= 1; y++) {
+                floodFill(visited, row+x, col+y, symbolToFill);
+            }
+        }
     }
 }
 
