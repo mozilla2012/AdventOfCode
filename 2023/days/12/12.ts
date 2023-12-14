@@ -1,12 +1,13 @@
 // https://adventofcode.com/2023/day/12
-
+const {	Worker } = require("worker_threads");
 const KNOWN = '#';
 const EMPTY = '.';
 const VAR = '?';
-export function adventMain(input: string): any {
+export async function adventMain(input: string): Promise<any> {
     const lines = input.split('\n');
     let sum = 0;
     let count = 0;
+    const workerPromises = [];
     for(let line of lines) {
         console.log(++count);
         const p1puzzle: string[] = line.split(' ')[0]!.split('');
@@ -15,12 +16,56 @@ export function adventMain(input: string): any {
         const valuesStr: string = line.split(' ')[1]!; 
         const valuesStr5: string =  `${valuesStr},${valuesStr},${valuesStr},${valuesStr},${valuesStr}`;
         console.log(puzzle5.join(''), valuesStr5);
-        const poss = countPossibilities(0, puzzle5, valuesStr5); // Recursion time!;
-        console.log('poss', poss);
-        sum += poss;
+        // const poss = countPossibilities(0, puzzle5, valuesStr5); // Recursion time!;
+
+        workerPromises.push(createWorker(puzzle5, valuesStr5, count));
+        // Create new worker
+        // const worker = new Worker("./doLine.js", {
+        //     workerData: {
+        //         puzzle: puzzle5,
+        //         values: valuesStr5
+        //     }
+        // });
+        // Listen for a message from worker
+        // worker.once("message", (result: any) => {
+        //     console.log(`Result: ${result}`);
+        // });
+        // worker.on("error", (error: any) => {
+        //     console.log(error);
+        // });
+        // worker.on("exit", (exitCode: any) => {
+        //     console.log(exitCode);
+        // });
+        // console.log('Done!');
+
+        // console.log('poss', poss);
+        // sum += poss;
     }
-    return sum;
+    const thread_results: number[] = await Promise.all(workerPromises) as number[];
+
+    console.log(thread_results);
+
+    return thread_results.reduce((acc: number, curr: number)=> acc+curr,0);
 }
+
+function createWorker(puzzle: string[], values: string, puzzleNumber: number) {
+    return new Promise(function (resolve, reject) {
+      const worker = new Worker("./build/days/12/doLine.js", {
+        workerData: {
+            puzzle: puzzle,
+            values: values,
+            puzzleNumber: puzzleNumber,
+        }
+      });
+      worker.on("message", (data: any) => {
+        resolve(data);
+      });
+      worker.on("error", (msg: any) => {
+        reject(`An error ocurred: ${msg}`);
+      });
+    });
+  }
+
 
 function getGroupingsForRow (row: string[]): string {
     const groups: number[] = [];
@@ -47,6 +92,7 @@ function countPossibilities(startingIndex: number, puzzle: string[], correctValu
     // console.log('Iterating...', startingIndex, puzzle.join(''), correctValue);
     const currentStr = getGroupingsForRow(puzzle);
     if (!correctValue.startsWith(currentStr)) {
+        // console.log(correctValue, 'doesnt start with', currentStr);
         return 0;
     } 
 

@@ -39,7 +39,7 @@ async function runner() {
 
     // Run the test data!
     console.log('Testing...\n');
-    const testResult: any = importedModule.adventMain(testData);
+    const testResult: any = await importedModule.adventMain(testData);
     if (testResult != expectedTestResult) {
         console.log(`Expected to get ${expectedTestResult} but got ${testResult}.`)
         process.exit(1);
@@ -49,7 +49,7 @@ async function runner() {
 
     // Run the main puzzle!
     const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8');
-    const mainResult: any = importedModule.adventMain(puzzleFileContent);
+    const mainResult: any = await importedModule.adventMain(puzzleFileContent);
     console.log('\nTry this!:\n' + mainResult + '\n');
 }
 
