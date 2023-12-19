@@ -19,7 +19,7 @@ async function runner() {
     const pathToCode: string =   `../${pathToDir}/${dayToRun}.js`; // Reading in a module? Your starting dir is the built .js file.
     const pathToTest: string =   `build/${pathToDir}/sample.txt`;  // Reading in a file? Your starting point is ...the root of the project?
     const pathToPuzzle: string = `build/${pathToDir}/puzzle.txt`;  //                    Again, this code is probably highly illegal.
-    
+
 
     // Import the day's module:
     const importedModule = await import(pathToCode);
@@ -45,7 +45,7 @@ async function runner() {
         process.exit(1);
     }
     console.log('\nTest passed! Attempting main puzzle...\n');
-    
+
 
     // Run the main puzzle!
     const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8');

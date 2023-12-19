@@ -20,9 +20,13 @@ export const hashString = (str: string, seed = 0) => {
     h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
     h2  = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
     h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-  
+
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
+
+export function transpose(thing: any[][]): any[][] {
+    return thing[0]!.map((_, colIndex) => thing.map(row => row[colIndex]))
+}
 
 export function rotateCw(thing: any[][]): any[][] {
     return thing[0]!.map((_, colIndex) => thing.map(row => row[colIndex]).reverse())
