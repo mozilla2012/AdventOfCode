@@ -2,8 +2,8 @@
 
 export function adventMain(input: string): any {
     const lines = input.split('\n');
-    for(let line of lines) {
-    
-    }
+    lines.forEach((line: string) => {
+
+    });
     return 0;
 }
