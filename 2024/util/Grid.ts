@@ -1,6 +1,7 @@
 import { hashString, p } from "./utils";
 
 const DEFAULT_DELIMITER = '';
+const DEFAULT_PRINT_DELIMITER = ' ';
 
 /**
  * A simple Grid object with handy helper functions built-in for easier parsing and manipulation.
@@ -123,14 +124,14 @@ export class Grid<T> {
      * Print this instance of the Grid object. Uses the internal delimeter if one is not provided.
      * @param delimeter an optional string that is used to join the elements of the grid.
      */
-    print(delimeter = this.delimeter): void {
+    print(delimeter = DEFAULT_PRINT_DELIMITER): void {
         printGrid(this.data, delimeter);
     }
 
     /**
      * Alias for print, for brevity.
      */
-    p(delimeter = this.delimeter): void {
+    p(delimeter = DEFAULT_PRINT_DELIMITER): void {
         this.print(delimeter);
     }
 
@@ -198,7 +199,7 @@ export class Grid<T> {
  * Given a 2D array of any type, print each line of the grid.
  * Each row gets joined together and printed as one long string.
  */
-export function printGrid(grid: any[][], delimeter = DEFAULT_DELIMITER): void {
+export function printGrid(grid: any[][], delimeter = DEFAULT_PRINT_DELIMITER): void {
     grid.forEach((s)=> console.log(s.join(delimeter)));
     console.log();
 }
