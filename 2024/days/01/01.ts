@@ -1,10 +1,33 @@
 // https://adventofcode.com/2024/day/1
 
-// Part 2, golfed
+import { Grid } from "../../util/Grid";
+
+// Part 2, with Grid class:
 export function adventMain(input: string): any {
-    const [l, r] = [input.split('\n').map((l) => Number(l.split('  ')[0]!)), input.split('\n').map((l) => Number(l.split('  ')[1]!))];
-    return l.reduce((sum: number, val: number) => sum + r.filter((rightVal: number) => (rightVal === val)).length * val, 0);
+    const g: Grid<number> = Grid.fromString(input, '   ');
+    g.transpose();
+    return g.data[0].reduce((sum: number, val: number) => sum + g.data[1].filter((val2)=>val===val2).length * val, 0);
 }
+
+// // Part 1, with Grid class:
+// export function adventMain(input: string): any {
+//     const g: Grid<number> = Grid.fromString(input, '   ');
+//     // Because I don't have .eachCol or .eachRow made yet I have to transpose twice.
+//     g.transpose(); 
+//     g.data.forEach((row: number[])=> {
+//         row = row.sort();
+//     });
+//     g.transpose();
+//     return g.data.reduce((sum: number, row: number[]) => {
+//         return sum + Math.abs(row[0]-row[1]);
+//     }, 0);
+// }
+
+// // Part 2, golfed
+// export function adventMain(input: string): any {
+//     const [l, r] = [input.split('\n').map((l) => Number(l.split('  ')[0]!)), input.split('\n').map((l) => Number(l.split('  ')[1]!))];
+//     return l.reduce((sum: number, val: number) => sum + r.filter((rightVal: number) => (rightVal === val)).length * val, 0);
+// }
 
 // Part 2
 // export function adventMain(input: string): any {
