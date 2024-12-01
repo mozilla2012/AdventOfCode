@@ -32,6 +32,10 @@ async function runner() {
         throw new Error('The test file (sample.txt) should start with two lines: The first being the expected answer and the second some' 
             + 'sort of divider. The test data should start on line 3.');
     }
+    const lastRow: string | undefined = testFileLines[testFileLines.length - 1];
+    if (!lastRow) {
+        console.log('\nWARNING: The input file had an empty line at the end! This might lead to breakage!\n');
+    }
     const expectedTestResult = testFileLines.shift();
     testFileLines.shift();
     const testData = testFileLines.join('\n');
@@ -49,8 +53,13 @@ async function runner() {
 
     // Run the main puzzle!
     const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8');
+    const puzzleFileLines: string[] = puzzleFileContent.split('\n');
+    const lastRowPuzzle: string | undefined = puzzleFileLines[puzzleFileLines.length - 1];
     const mainResult: any = await importedModule.adventMain(puzzleFileContent);
     console.log('\nTry this!:\n' + mainResult + '\n');
+    if (!lastRowPuzzle) {
+        console.log('\nWARNING: The input file had an empty line at the end! This might lead to breakage!\n');
+    }
 }
 
 runner();
