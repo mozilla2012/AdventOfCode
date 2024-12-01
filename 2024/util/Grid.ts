@@ -106,6 +106,20 @@ export class Grid<T> {
     }
 
     /**
+     * Internal helper function; should not be called outside of this class.
+     * Given a row number and/or column number, throw errors if they are out of bounds.
+     * This function should be called every time a value from the grid is read.
+     * @throws Errors if the index is out of bounds.
+     */
+    _boundsCheck({rowNum, colNum} : {rowNum?: number, colNum?: number}): void {
+        if(   (rowNum !== undefined && (rowNum < 0 || rowNum >= this.numRows))
+           || (colNum !== undefined && (colNum < 0 || colNum >= this.numCols))) {
+            throw new Error(`Index out of bounds: Tried to read row ${rowNum}, col ${colNum}. `
+                            + `Actual rows x cols: ${this.numRows} x ${this.numCols}`);
+        }
+    }
+
+    /**
      * Print this instance of the Grid object. Uses the internal delimeter if one is not provided.
      * @param delimeter an optional string that is used to join the elements of the grid.
      */
@@ -163,9 +177,7 @@ export class Grid<T> {
      * @throws Errors if the index is out of bounds.
      */
     getCell(rowNum: number, colNum: number): T {
-        if(rowNum < 0 || rowNum >= this.numRows || colNum < 0 || colNum >= this.numCols) {
-            throw new Error(`Index out of bounds: Tried to read row ${rowNum}, col ${colNum}. Actual rows x cols: ${this.numRows} x ${this.numCols}`);
-        }
+        this._boundsCheck({ rowNum, colNum });
         return this.data[rowNum][colNum];
     }
 
@@ -173,9 +185,9 @@ export class Grid<T> {
     // Constructor that clones from another Grid. Maybe that should be the default?
     // add row, col
     // delete row, col
-    // get row, col, cell
+    // get row, col
     // set row, col, cell
-    // eachRow, eachCol, eachCell iterators
+    // eachRow, eachCol, eachCell iterators. See how ExcelJS does it?
     // Pretty print - Each column should be of equal width. Requires knowing how wide the widest of each column is.
     // If the grid contains numbers, add parsing. Track highest/lowest per row?
     // Unit tests?
