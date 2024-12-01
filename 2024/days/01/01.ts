@@ -4,9 +4,8 @@ import { Grid } from "../../util/Grid";
 
 // Part 2, with Grid class:
 export function adventMain(input: string): any {
-    const g: Grid<number> = Grid.fromString(input, '   ');
-    g.transpose();
-    return g.data[0].reduce((sum: number, val: number) => sum + g.data[1].filter((val2)=>val===val2).length * val, 0);
+    const g: Grid<number> = Grid.fromString<number>(input, '   ').transpose();
+    return g.data[0].reduce((sum: number, val: number) => sum + g.data[1].filter((val2) => val === val2).length * val, 0);
 }
 
 // // Part 1, with Grid class:

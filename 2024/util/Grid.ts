@@ -123,26 +123,32 @@ export class Grid<T> {
     /**
      * Transpose this instance of the Grid object.
      * In other words, mirror the array over the diagnonal.
+     * Returns the Grid object that was transposed.
      */
-    transpose(): void {
+    transpose(): Grid<T> {
         this.data = transpose(this.data);
         this._countRowsAndCols();
+        return this;
     }
 
     /**
      * Rotate this Grid clockwise.
+     * Returns the Grid object that was rotated.
      */
-    rotateCw(): void {
+    rotateCw(): Grid<T> {
         this.data = rotateCw(this.data);
         this._countRowsAndCols();
+        return this;
     }
 
     /**
      * Rotate this Grid counter clockwise.
+     * Returns the Grid object that was rotated.
      */
-    rotateCcw(): void {
+    rotateCcw(): Grid<T> {
         this.data = rotateCcw(this.data);
         this._countRowsAndCols();
+        return this;
     }
 
     /**
@@ -164,6 +170,7 @@ export class Grid<T> {
     }
 
     // todo:
+    // Constructor that clones from another Grid. Maybe that should be the default?
     // add row, col
     // delete row, col
     // get row, col, cell
