@@ -29,5 +29,4 @@ The targets in `package.json` are set up nicely. Target `buildrun` does a clean 
 1. Run the command in the `Running` section above.
 
 ## Todo:
-1. Add puzzle.txt to .gitignore. I shouldn't be committing that.
 1. Add auto-submission to testing
