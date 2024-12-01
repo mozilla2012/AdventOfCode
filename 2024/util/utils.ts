@@ -1,21 +1,4 @@
-/**
- * Given a 2D array of any type, print each line of the grid.
- * Each row gets joined together and printed as one long string.
- */
-export function printGrid(grid: any[][]) {
-    grid.forEach((s)=> console.log(s.join('')));
-    console.log();
-}
-
-/**
- * Given a 2D array of any type, create a hash string that represents the grid.
- * Can be used to check if grids are equal.
- * @returns a hashed string representing a 2D array
- */
-export function hashGrid(grid: any[][]): number {
-    const gridStr = grid.map((row: any[])=>row.join('')).join('');
-    return hashString(String(gridStr));
-}
+import { Grid } from "./Grid";
 
 /**
  * Given a string, return a hash representing that string.
@@ -24,7 +7,7 @@ export function hashGrid(grid: any[][]): number {
  * @param seed an integer that can be supplied to change the hash
  * @returns a hashed version of the supplied string
  */
-export const hashString = (str: string, seed = 0) => {
+export const hashString = (str: string, seed = 0): number => {
     let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
     for(let i = 0, ch; i < str.length; i++) {
         ch = str.charCodeAt(i);
@@ -40,22 +23,13 @@ export const hashString = (str: string, seed = 0) => {
 };
 
 /**
- * Given a 2D array of any type, swap the rows and columns.
- * In other words, mirror the array over the diagnonal and return a copy.
+ * Simple wrapper of console.log(), for brevity.
  */
-export function transpose(grid: any[][]): any[][] {
-    return grid[0]!.map((_, colIndex) => grid.map(row => row[colIndex]))
-}
-
-/**
- * Given a 2D array of any type, rotate the grid clockwise.
- */
-export function rotateCw(grid: any[][]): any[][] {
-    return grid[0]!.map((_, colIndex) => grid.map(row => row[colIndex]).reverse())
-}
-/**
- * Given a 2D array of any type, rotate the grid counterclockwise.
- */
-export function rotateCcw(grid: any[][]): any[][] {
-    return rotateCw(rotateCw(rotateCw(grid))); // Yeah this should probably be done the right way
+export function p(...args: any[]) {
+    if(Array.isArray(args) && args.length === 1 && args[0] instanceof Grid) {
+        console.log('Defaulting to grid.print():');
+        args[0].print();
+    } else {
+        console.log(...args);
+    }
 }
