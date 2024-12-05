@@ -3,8 +3,8 @@
 // Part 2
 export function adventMain(input: string): any {
     const sections = input.split('\n\n');
-    const rules: number[][] = sections[0].split('\n').map((line: string) => line.split('|').map((s: string)=> parseInt(s)));
-    const updates: number[][] = sections[1].split('\n').map((row: string)=> row.split(',').map((item: string)=> parseInt(item)));
+    const rules: number[][] = sections[0].split('\n').map((row: string) => row.split('|').map((s: string)=> parseInt(s)));
+    const updates: number[][] = sections[1].split('\n').map((row: string)=> row.split(',').map((s: string)=> parseInt(s)));
     const earlierMap: Map<number, number[]> = new Map();
     rules.forEach((pair: number[]) => { // For each number in the list of rules, make a list of numbers that should be ordered earlier.
         earlierMap.set(pair[1], earlierMap.has(pair[1]) ? [...earlierMap.get(pair[1]), pair[0]] : [pair[0]]);
