@@ -6,27 +6,21 @@ export function adventMain(input: string): any {
     const rules: number[][] = sections[0].split('\n').map((line: string) => line.split('|').map((s: string)=> parseInt(s)));
     const updates: number[][] = sections[1].split('\n').map((row: string)=> row.split(',').map((item: string)=> parseInt(item)));
     const earlierMap: Map<number, number[]> = new Map();
-    rules.forEach((pair: number[])=>{
-        if(earlierMap.has(pair[1])) {
-            earlierMap.set(pair[1], [...earlierMap.get(pair[1]), pair[0]]);
-        } else {
-            earlierMap.set(pair[1], [pair[0]]);
-        }
+    rules.forEach((pair: number[]) => { // For each number in the list of rules, make a list of numbers that should be ordered earlier.
+        earlierMap.set(pair[1], earlierMap.has(pair[1]) ? [...earlierMap.get(pair[1]), pair[0]] : [pair[0]]);
     })
 
-    let sum = 0;
-    updates.forEach((line: number[]) => {
+    return updates.reduce((sum: number, line: number[]) => {
         let validLine: number[] = [...line];
-        line.forEach((item: number) => {
-            const earlierVals: number[] = earlierMap.get(item)?.filter((earlier:number)=>line.includes(earlier)) ?? [];
+        line.forEach((item: number) => { // Determine how many values come before the current item. Put the item at that index.
+            const earlierVals: number[] = earlierMap.get(item)?.filter((earlier: number) => line.includes(earlier)) ?? [];
             validLine[earlierVals.length] = item;
-        });
-        if(JSON.stringify(line) !== JSON.stringify(validLine)) {
-            sum += validLine[(validLine.length-1)/2];
-        }
-    });
-    return sum;
+        }); // Sketchy array compare with JSON stringify:
+        return sum + ((JSON.stringify(line) === JSON.stringify(validLine)) ? 0 : validLine[(validLine.length-1)/2]);
+    }, 0);
 }
+
+// Note: Part 1 below is vastly different from part 2 above. To make the above part 2 work for part 1, change the === on line 19 to !==
 
 // Part 1
 // export function adventMain(input: string): any {
