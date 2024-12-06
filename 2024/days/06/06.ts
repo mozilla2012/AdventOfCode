@@ -1,8 +1,6 @@
 // https://adventofcode.com/2024/day/6
 
-import { error } from "console";
 import { Grid } from "../../util/Grid";
-import { p } from "../../util/utils";
 const UP = 1;
 const RIGHT = 2;
 const DOWN = 3;
@@ -15,12 +13,8 @@ export function adventMain(input: string): any {
     let r = pos[0];
     let c = pos[1];
     g.data[r][c] = 'X';
-    p(g);
-    p(pos);
-    p(dir);
-    let inMap = true;
     let visits = 1;
-    while(inMap) {
+    while(true) {
         let r = pos[0];
         let c = pos[1];
         switch(dir) { 
@@ -38,7 +32,6 @@ export function adventMain(input: string): any {
                         dir = rotateDir(dir);
                     }
                 } catch (e) {
-                    p('We have left the map!');
                     return visits;
                 }
                 break; 
@@ -57,7 +50,6 @@ export function adventMain(input: string): any {
                         dir = rotateDir(dir);
                     }
                 } catch (e) {
-                    p('We have left the map!');
                     return visits;
                 }
                 break; 
@@ -76,7 +68,6 @@ export function adventMain(input: string): any {
                         dir = rotateDir(dir);
                     }
                 } catch (e) {
-                    p('We have left the map!');
                     return visits;
                 }
                 break; 
@@ -95,45 +86,30 @@ export function adventMain(input: string): any {
                         dir = rotateDir(dir);
                     }
                 } catch (e) {
-                    p('We have left the map!');
                     return visits;
                 }
                 break; 
             } 
             default: { 
                 throw new Error('How?');
-                break; 
             } 
         } 
     }
     return visits;
 }
 
-
-
-
-
-
 function findStart(g: Grid<string>): [number, number] {
     let pos: [number, number] = undefined;
-    g.data.forEach((row: string[], rowI)=>{
-        row.forEach((item: string, colI)=>{
-            if(item ==='^'){
+    g.data.find((row: string[], rowI) => {
+        return row.find((item: string, colI) => {
+            if(item ==='^') {
                 pos = [rowI, colI];
+                return true;
             }
-            if(pos){
-                return;
-            }
+            return false;
         });
-        if(pos){
-            return;
-        }
     });
     return pos;
-}
-
-function move(g: Grid<string>, pos: [number, number], dir: number) {
-    
 }
 
 function rotateDir(dir: number): number {
@@ -151,8 +127,7 @@ function rotateDir(dir: number): number {
             return UP;
         } 
         default: { 
-            throw new Error('How2?');
-            break; 
+            throw new Error('How?');
         } 
     }
 }
