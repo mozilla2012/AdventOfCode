@@ -22,6 +22,7 @@
     },
     "homepage": "https://github.com/mozilla2012/adventOfCode#readme",
     "dependencies": {
+        "json-stable-stringify": "^1.2.0",
         "node": "^20.18.1"
     },
     "devDependencies": {

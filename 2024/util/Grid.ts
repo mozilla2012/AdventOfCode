@@ -1,20 +1,22 @@
 import { hashString, p } from "./utils";
 
 const DEFAULT_DELIMITER = '';
-const DEFAULT_PRINT_DELIMITER = ' ';
+const DEFAULT_PRINT_DELIMITER = '';
 
 /**
  * A simple Grid object with handy helper functions built-in for easier parsing and manipulation.
- * 
+ *
  * Constructors:
- *   const griddy: Grid<number> = 
+ *   const griddy: Grid<number> =
  *       = new Grid<number>([[1,2,3],[4,5,6]]);    // Creates a 2x3 grid
  *       = Grid.fromDimensions<number>(5, 10, 0);  // Initializes a 5x10 grid with all zeros
  *       = Grid.fromRows<number>(['123','456']);   // Creates a 2x3 grid. Useful for parsing input line-by-line.
  *       = Grid.fromString<number>('123\n456');    // Creates a 2x3 grid
  *       = Grid.fromString<number>('1 2 3\n4 5 6', ' '); // Creates a 2x3 grid; different parsing
  *       = Grid.fromString<number>('123 456', '', ' ');  // Creates a 2x3 grid; different parsing
- * 
+ *   Example to copy:
+ *     const g: Grid<string> = Grid.fromString<string>(input);
+ *
  * Helpers:
  *   griddy.print();
  *     or griddy.p();
@@ -47,6 +49,11 @@ export class Grid<T> {
         this._countRowsAndCols();
     }
 
+    static copyGrid<T>(grid: Grid<T>): Grid<T> {
+        const newData: T[][] = grid.data.map((row: T[]) => [...row]); // Note that this only works for primitives at the moment.
+        return new Grid(newData, grid.delimeter);
+    };
+
     /**
      * Given a size and a type, create an empty Grid object.
      * An optional initialValue can be provided to initialize the grid, if you'd like. Otherwise initializes to undefined.
@@ -74,12 +81,16 @@ export class Grid<T> {
         return new this(rows.map((row: string) => {
             const stringVals: string[] = row.split(delimeter);
             if(!containsWhitespace && stringVals.some((val: string) => val.match(/^\s+$/))) {
+                p(stringVals);
                 console.warn('Your grid parsing includes some whitespace! Did you set up your delimeter properly? It defaults to \'\'');
                 containsWhitespace = true;
             }
+            const parseAsNumbers = true;
+            if (parseAsNumbers) {
+                return stringVals.map((s: string)=> s as RowType);
+            }
             return stringVals as RowType[];
-        })
-        );
+        }));
     }
 
     /**
@@ -107,17 +118,12 @@ export class Grid<T> {
     }
 
     /**
-     * Internal helper function; should not be called outside of this class.
-     * Given a row number and/or column number, throw errors if they are out of bounds.
+     * Given a row number and/or column number, return true if the point is out of bounds.
      * This function should be called every time a value from the grid is read.
-     * @throws Errors if the index is out of bounds.
      */
-    _boundsCheck({rowNum, colNum} : {rowNum?: number, colNum?: number}): void {
-        if(   (rowNum !== undefined && (rowNum < 0 || rowNum >= this.numRows))
-           || (colNum !== undefined && (colNum < 0 || colNum >= this.numCols))) {
-            throw new Error(`Index out of bounds: Tried to read row ${rowNum}, col ${colNum}. `
-                            + `Actual rows x cols: ${this.numRows} x ${this.numCols}`);
-        }
+    isOutOfBounds(rowNum?: number, colNum?: number): boolean {
+        return (rowNum !== undefined && (rowNum < 0 || rowNum >= this.numRows))
+           || (colNum !== undefined && (colNum < 0 || colNum >= this.numCols));
     }
 
     /**
@@ -175,20 +181,59 @@ export class Grid<T> {
 
     /**
      * Given a row and column index, return the value within that cell.
-     * @throws Errors if the index is out of bounds.
+     * Returns undefined if the cell is out of bounds.
      */
     getCell(rowNum: number, colNum: number): T {
-        this._boundsCheck({ rowNum, colNum });
+        if(this.isOutOfBounds(rowNum, colNum)) {
+            return undefined;
+        }
         return this.data[rowNum][colNum];
     }
 
+    /**
+     * Iterate over each row of the grid.
+     */
+    eachRow(callbackfn: (row: T[], rowNumber: number, grid: T[][]) => void): void {
+        this.data.forEach((dataRow: T[], dataRowNumber: number, dataGrid: T[][]) => {
+            callbackfn(dataRow, dataRowNumber, dataGrid);
+        });
+    }
+
+    /**
+     * Iterate over each cell in the grid and do something.
+     * @param callbackfn is the function you provide to iterate over the grid. The first argument is the value in each cell. The next args are the row and the column of the current value, and the fourth value is the entire grid of data.
+     * @param qualifier is the function you can provide to only call the callback if the qualifier returns true for the given value.
+     */
+    eachCell(
+        callbackfn: (value: T, rowIndex: number, colIndex: number, grid: T[][]) => void,
+        qualifier?: (value: T, rowIndex: number, colIndex: number, grid: T[][]) => boolean
+    ): void {
+        this.eachRow((row: T[], rowIndex: number, grid: T[][]) => {
+            row.forEach((value: T, colIndex: number) => {
+                if(!qualifier || (qualifier && qualifier(value, rowIndex, colIndex, grid))) {
+                    callbackfn(value, rowIndex, colIndex, grid);
+                }
+            });
+        });
+    }
+
     // todo:
+    // This REALLY needs to be able to parse numbers if we say it's numbers...
     // Constructor that clones from another Grid. Maybe that should be the default?
+    // Maybe have points represented as a tuple/interface with row/col? Hmmm. Logan's grid util has some nice stuff.
+    // "walk directions" - have something that iterates over all neighbors of a cell? See Jake's solution for Day 4
     // add row, col
     // delete row, col
     // get row, col
     // set row, col, cell
-    // eachRow, eachCol, eachCell iterators. See how ExcelJS does it?
+    // row/col/cell includes
+    // eachCol iterator
+    // Some sort of "pointer" that we can move? Maybe that should be a parameter?
+    // point.getneighbors(direction, starDistance, numNeighbors)
+    // Maybe each cell should be an object, and we can set a "read" value, for checking later? Or the grid could just be custom objects when defined...
+    //    Maybe we should have a constructor arg that makes custom objects with a toggle? (e.g. provide a list of ints, but it gets stored as a list of 
+    //    objects with values that you can set. i.e. each cell would be { value: '50', read?: false, sum?: 0, ...etc}).
+    //    If we really want to get crazy, we could define types for Row, Col, and Cell... That's overkill tho
     // Pretty print - Each column should be of equal width. Requires knowing how wide the widest of each column is.
     // If the grid contains numbers, add parsing. Track highest/lowest per row?
     // Unit tests?
@@ -200,7 +245,7 @@ export class Grid<T> {
  * Each row gets joined together and printed as one long string.
  */
 export function printGrid(grid: any[][], delimeter = DEFAULT_PRINT_DELIMITER): void {
-    grid.forEach((s)=> console.log(s.join(delimeter)));
+    grid.forEach((s: any[])=> console.log(s.map((t: any)=>(String(t))).join(delimeter)));
     console.log();
 }
 
