@@ -2,18 +2,28 @@
 
 import { p } from "./../../util/utils";
 
-
 export function adventMain(input: string): any {
     const lines = input.split('\n');
     let highest = 0;
 
+    // Speed-up idea: 
+    // Pre-calculate all the prices and changes. Don't do it every time, you fool
+
     for(let one = -9; one <= 9; one++) {
         for(let two = -9; two <= 9; two++) {
             for(let three = -9; three <= 9; three++) {
+                p(one, two, three);
                 for(let four = -9; four <= 9; four++) {
                     const seq: number[] = [one, two, three, four];
-                    if(three === -9 && four === -9) {
-                        p(seq);
+                    if(    false
+                        || Math.abs(three+four) > 9
+                        || Math.abs(two+three+four) > 9
+                        || Math.abs(one+two+three+four) > 9
+                        || Math.abs(two+three) > 9
+                        || Math.abs(one+two+three) > 9
+                        || Math.abs(one+two) > 9
+                    ) {
+                        continue;
                     }
                     let sum = 0;
                     lines.forEach((line: string) => {
@@ -24,7 +34,7 @@ export function adventMain(input: string): any {
                         for(let i = 0; i < 2000; i++) {
                             prices.push(num % 10);
                             if (prices.length > 4) { prices.shift() };
-                            if(prices.length > 1) { changes.push(prices[prices.length-1] - prices[prices.length-2]) }
+                            if (prices.length > 1) { changes.push(prices[prices.length-1] - prices[prices.length-2]) }
                             if (changes.length > 4) { changes.shift() }
                             // p(`${line}: ${num}, prices: ${[prices]}, changes ${changes}`);
                             if(seq[0] === changes[0] && seq[1] === changes[1] && seq[2] === changes[2] && seq[3] === changes[3]) {
