@@ -26,7 +26,7 @@ async function runner() {
 
 
     // Read in the test file
-    const testFileContent: string = fs.readFileSync(pathToTest, 'utf8');
+    const testFileContent: string = fs.readFileSync(pathToTest, 'utf8').replaceAll(/(\r\n|\n\r)/g, '\n');
     const testFileLines: string[] = testFileContent.split('\n');
     if (testFileLines.length < 2) {
         throw new Error('The test file (sample.txt) should start with two lines: The first being the expected answer and the second some' 
@@ -52,7 +52,7 @@ async function runner() {
 
 
     // Run the main puzzle!
-    const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8');
+    const puzzleFileContent: string = fs.readFileSync(pathToPuzzle, 'utf8').replaceAll(/(\r\n|\n\r)/g, '\n');
     const puzzleFileLines: string[] = puzzleFileContent.split('\n');
     const lastRowPuzzle: string | undefined = puzzleFileLines[puzzleFileLines.length - 1];
     const mainResult: any = await importedModule.adventMain(puzzleFileContent);
